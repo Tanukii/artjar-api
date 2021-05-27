@@ -1,13 +1,14 @@
-// var Provincia=require("../models/provincia");
+// --- Importacion de modelos ---
+ var usuarioModel=require("../models/usuarioModel");
+
 // var Municipio=require("../models/municipio");
 // var Cliente=require("../models/cliente");
 // var Direccion=require("../models/direccion");
 // var Credenciales=require("../models/credenciales");
 
-// var bcrypt=require("bcrypt"); //<----paquete para hashear passwords y comprobar hashes
-// var mongoose=require("mongoose");
-
-// var enviarEmail=require("../models/clienteMailjet");
+const uuid= require("uuid");
+const bcrypt=require("bcrypt");
+const mongoose=require("mongoose");
 
 
 // function _crearVistaRegistro(res,mensajesError){
@@ -36,7 +37,32 @@
 
 module.exports={
     registropost: async (req,res,next)=>{
-        console.log("HAY CONTACTO!!!")
+        // - Llegada de datos por body
+        // - Encriptado de contraseña -
+        let _hashPass = bcrypt.hashSync(req.body.password,15)
+        // generamos el objeto del usuario -
+
+        let _newUser = new usuarioModel({
+            id: uuid.v4(),
+            nickname: req.body.nickname,
+            password: _hashPass,
+            tier: 'Cliente',
+            exBucks: 500
+        });
+
+        // --- Inserccion en BD ---
+        try {
+            await _newUser.save();
+            let respuesta = {"Correcto":"Parece que se ha grabado en la BD"};
+            res.setHeader("Content-Type","application/json");
+            res.status(200).send(respuesta);
+        } catch (error) {
+            await _newUser.save();
+            let respuesta = {"Error":"Hubo un error "};
+            console.log(error);
+            res.setHeader("Content-Type","application/json");
+            res.status(200).send(respuesta);
+        }
     }
 }
 

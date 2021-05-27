@@ -12,17 +12,17 @@ servidor.listen(3000, (err) => {
 });
 
 
-// mongoose.connect(
-//     process.env.CONNECTION_MONGO,
-//     {
-//         useNewUrlParser: true,
-//         useUnifiedTopology: true
-//     },
-//     (err) => {
-//         if (err) {
-//             console.log("ERROR CONEXION A MONGODB " + err);
-//         } else {
-//             console.log("... conectados al servidor MONGODB al puerto 27017 ...")
-//         }
-//     }
-// );
+mongoose.connect(
+    process.env.CONNECTION_MONGO,
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    },
+    (err) => {
+        if (err) {
+            console.log("ERROR CONEXION A MONGODB " + err);
+        } else {
+            console.log("... conectados al servidor MONGODB al puerto 27017 ...")
+        }
+    }
+);
