@@ -1,17 +1,22 @@
 // --- IMPORTACION DE CONTROLADORES ---
-var Registro = require("../controllers/clienteControllerAsyncAwait")
+var userController = require("../controllers/userController")
 
-module.exports=function(servidorExpress){
+module.exports=function(app){
 
-    // servidorExpress.param(
-    //     "tercerseg",
-    //     (req,res,next,valortercerSeg)=>{
-    //         req.tercerseg=valortercerSeg;
-    //         next();
-    //     }
-    // );
+    // --- SEGMENTOS URL ---
+    // - segmento para nickname -
+    app.param(
+        "nick",
+        (req,res,next,nickValue)=>{
+            req.nick=nickValue;
+            next();
+        }
+    );
     
     
-    // servidorExpress.get('/api/getMunicipio/:tercerseg',RESTService.getMunicipios);
-    servidorExpress.post('/api/Registro/', Registro.registropost);
+    // app.get('/api/getMunicipio/:tercerseg',RESTService.getMunicipios);
+    // - Ruta para comprobar nombre de usuario -
+    app.get('/api/CheckNickname/:nick',userController.checkNickname);
+    // - Ruta para registro -
+    app.post('/api/Registro/', userController.registroPost);
 }

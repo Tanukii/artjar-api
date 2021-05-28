@@ -1,28 +1,19 @@
-var express = require('express');
-var mongoose = require('mongoose');
-var configPipeline = require('./config_server/middleware');
-var servidor = express();
+const express = require('express'),
+    mongoose = require('mongoose'),
+    middlewareImport = require('./config_server/middleware'),
+    app = express();
 require('dotenv').config();
 
-configPipeline(servidor);
+middlewareImport(app);
 
-servidor.listen(3000, (err) => {
-    if (!err) { console.log(" servidor web express corriendo en puerto 3000 "); }
-    else { console.log(`errores al lanzar el servidor ${err}`); }
-});
+app.listen(3000, (err) => !err ? console.log("Servidor API escuchando en 3000") : console.log("Error servidor "+ err)  );
 
 
 mongoose.connect(
-    process.env.CONNECTION_MONGO,
+    process.env.cadenaMongo,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
     },
-    (err) => {
-        if (err) {
-            console.log("ERROR CONEXION A MONGODB " + err);
-        } else {
-            console.log("... conectados al servidor MONGODB al puerto 27017 ...")
-        }
-    }
+    (err) => !err ? console.log("Mongo escuchando en 27017") : console.log("Error " + err)
 );

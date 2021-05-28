@@ -2,15 +2,15 @@
 var bodyParser=require('body-parser');
 var rutas=require('./routing');
 
-module.exports=function(servidorExpress){
+module.exports=function(app){
     
     // - la sesion la manejara el behaviour subject en cliente, nosotros emularemos identity framework en servidor para identificar al usuario -
     // - Teoricamente solo seria necesario el parseo de body y json -
-    servidorExpress.use(bodyParser.urlencoded({extended:false}));
-    servidorExpress.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({extended:false}));
+    app.use(bodyParser.json());
 
     // - COnfiguracion de CORS para permitir peticiones con Angular
-    servidorExpress.use((req, res, next) => {
+    app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
         res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
@@ -18,6 +18,6 @@ module.exports=function(servidorExpress){
         next();
     });
     
-    rutas(servidorExpress);
+    rutas(app);
 
 }

@@ -1,14 +1,15 @@
 // --- Importacion de modelos ---
- var usuarioModel=require("../models/usuarioModel");
+const usuarioModel=require("../models/usuarioModel");
 
 // var Municipio=require("../models/municipio");
 // var Cliente=require("../models/cliente");
 // var Direccion=require("../models/direccion");
 // var Credenciales=require("../models/credenciales");
 
-const uuid= require("uuid");
-const bcrypt=require("bcrypt");
-const mongoose=require("mongoose");
+const uuid= require("uuid"),
+    bcrypt=require("bcrypt"),
+    mongoose=require("mongoose"),
+    jwt=require("jsonwebtoken");
 
 
 // function _crearVistaRegistro(res,mensajesError){
@@ -36,34 +37,53 @@ const mongoose=require("mongoose");
 // }
 
 module.exports={
-    registropost: async (req,res,next)=>{
-        // - Llegada de datos por body
+    checkNickname: async(req,res,next)=>{
+
+        // - Comprobacion de si un nickname ya esta en uso -
+        try {
+            let _returnMongo = await usuarioModel.find({ nickname: req.nick.toLowerCase() });
+            _returnMongo.length !== 0 ? res.status(200).send() : res.status(400).send()
+        } catch (err) {
+            console.log("Error en recuperacion de nickname "+err)
+        }
+    },
+    registroPost: async (req,res,next)=>{
+        // - Llegada de datos por body -
         // - Encriptado de contraseña -
         let _hashPass = bcrypt.hashSync(req.body.password,15)
-        // generamos el objeto del usuario -
-
-        let _newUser = new usuarioModel({
-            id: uuid.v4(),
-            nickname: req.body.nickname,
+        // generamos el objeto del usuario y lo asociamos al schema de mongoose -
+        let _newUser = {
+            idUser: uuid.v4(),
+            nickname: req.body.nickname.toLowerCase(),
             password: _hashPass,
             tier: 'Cliente',
             exBucks: 500
-        });
+        }
+
+        let _userSchema = new usuarioModel(_newUser);
 
         // --- Inserccion en BD ---
         try {
-            await _newUser.save();
-            let respuesta = {"Correcto":"Parece que se ha grabado en la BD"};
-            res.setHeader("Content-Type","application/json");
-            res.status(200).send(respuesta);
+            await _userSchema.save();
         } catch (error) {
-            await _newUser.save();
             let respuesta = {"Error":"Hubo un error "};
             console.log(error);
             res.setHeader("Content-Type","application/json");
-            res.status(200).send(respuesta);
+            res.status(500).send(respuesta);
         }
+
+        // --- Creacion de token y respuesta
+        delete _newUser['password'];
+        let _jwtUser = jwt.sign(_newUser,process.env.secretJWT);
+        let respuesta = {
+            Correcto: "Parece que se ha grabado en la BD",
+            jwt: _jwtUser
+        };
+
+        res.setHeader("Content-Type","application/json");
+        res.status(200).send(respuesta);
     }
+
 }
 
 // module.exports={
