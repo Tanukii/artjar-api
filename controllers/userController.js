@@ -52,15 +52,15 @@ module.exports = {
             let _tokenDecoded = jwt.verify(req.body.jwt, process.env.secretJWT);
             if (_tokenDecoded.exp > Math.floor(Date.now() / 1000)) {
                 res.setHeader("Content-Type", "application/json");
-                res.status(200).send({ res: true });
+                res.status(200).send({ res: true, exp:false });
             } else {
                 res.setHeader("Content-Type", "application/json");
-                res.status(200).send({ res: false });
+                res.status(200).send({ res: false, exp: true });
             }
         } catch (err) {
             console.log(err);
             res.setHeader("Content-Type", "application/json");
-            res.status(200).send({ res: false });
+            res.status(200).send({ res: false, exp:false });
         }
     },
     registroPost: async (req, res, next) => {
