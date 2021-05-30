@@ -19,4 +19,6 @@ module.exports=function(app){
     app.get('/api/CheckNickname/:nick',userController.checkNickname);
     // - Ruta para registro -
     app.post('/api/Registro/', userController.registroPost);
+    // - Ruta para comprobar si el usuario esta logueado -
+    app.post('/api/CheckLoged/', userController.checkLog);
 }

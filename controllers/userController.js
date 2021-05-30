@@ -42,9 +42,25 @@ module.exports={
         // - Comprobacion de si un nickname ya esta en uso -
         try {
             let _returnMongo = await usuarioModel.find({ nickname: req.nick.toLowerCase() });
-            _returnMongo.length !== 0 ? res.status(200).send() : res.status(400).send()
+            _returnMongo.length === 0 ? res.status(200).send() : res.status(400).send()
         } catch (err) {
             console.log("Error en recuperacion de nickname "+err)
+        }
+    },
+    checkLog: async(req,res,next)=>{
+        try {
+           let _tokenDecoded = jwt.verify(req.body.jwt,process.env.secretJWT);
+           if(_tokenDecoded.exp > Math.floor(Date.now() / 1000)){
+                res.setHeader("Content-Type","application/json");
+                res.status(200).send({ res: true});
+           } else{
+                res.setHeader("Content-Type","application/json");
+                res.status(200).send({ res: false});
+           }
+        } catch (err) {
+            console.log(err);
+            res.setHeader("Content-Type","application/json");
+            res.status(200).send({ res: false});
         }
     },
     registroPost: async (req,res,next)=>{
@@ -74,9 +90,9 @@ module.exports={
 
         // --- Creacion de token y respuesta
         delete _newUser['password'];
-        let _jwtUser = jwt.sign(_newUser,process.env.secretJWT);
+        let _jwtUser = jwt.sign(_newUser,process.env.secretJWT,{expiresIn: "1h"});
         let respuesta = {
-            Correcto: "Parece que se ha grabado en la BD",
+            userData: _newUser,
             jwt: _jwtUser
         };
 
