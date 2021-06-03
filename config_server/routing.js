@@ -1,5 +1,11 @@
 // --- IMPORTACION DE CONTROLADORES ---
 var userController = require("../controllers/userController")
+var imageController = require("../controllers/imageController")
+
+let multer = require('multer');
+
+let upload = multer({dest:'uploads/'});
+    
 
 module.exports=function(app){
 
@@ -12,9 +18,8 @@ module.exports=function(app){
             next();
         }
     );
-    
-    
-    // app.get('/api/getMunicipio/:tercerseg',RESTService.getMunicipios);
+
+    // --- RUTAS CLIENTE ---
     // - Ruta para comprobar nombre de usuario -
     app.get('/api/CheckNickname/:nick',userController.checkNickname);
 
@@ -27,4 +32,9 @@ module.exports=function(app){
     // - Ruta para comprobar si el usuario esta logueado -
     app.post('/api/CheckLoged/', userController.checkLog);
 
+
+
+    // --- RUTAS IMAGENES ---
+    // - Ruta para la subida de imagen -
+    app.post('/api/subirImagen/', upload.fields([{ name: 'foto', maxCount: 1 }]), imageController.procesarImagen);
 }

@@ -6,7 +6,7 @@ module.exports=function(app){
     
     // - la sesion la manejara el behaviour subject en cliente, nosotros emularemos identity framework en servidor para identificar al usuario -
     // - Teoricamente solo seria necesario el parseo de body y json -
-    app.use(bodyParser.urlencoded({extended:false}));
+    app.use(bodyParser.urlencoded({extended:true}));
     app.use(bodyParser.json());
 
     // - COnfiguracion de CORS para permitir peticiones con Angular
