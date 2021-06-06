@@ -85,7 +85,7 @@ module.exports = {
                     }
 
                     let _jwtUser = jwt.sign(_newUser, process.env.secretJWT, { expiresIn: "1h" });
-                    //let _jwtUser = jwt.sign(_newUser, process.env.secretJWT, { expiresIn: 5 });
+                    //let _jwtUser = jwt.sign(_newUser, process.env.secretJWT, { expiresIn: 10 });
                     let respuesta = {
                         userData: _newUser,
                         jwt: _jwtUser
