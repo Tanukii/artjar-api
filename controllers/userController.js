@@ -60,8 +60,16 @@ module.exports = {
         }
 
         // --- Creacion de token y respuesta
+        // - Borramos y volvemos a crear exBucks para que no viaje en el JWT pero como su creacion esta en medio
+        // - debemos borrar y crear
         delete _newUser['password'];
+        delete _newUser['exBucks']
+
         let _jwtUser = jwt.sign(_newUser, process.env.secretJWT, { expiresIn: "1h" });
+        //let _jwtUser = jwt.sign(_newUser, process.env.secretJWT, { expiresIn: 10 });
+
+        _newUser.exBucks = 500;
+
         let respuesta = {
             userData: _newUser,
             jwt: _jwtUser
@@ -81,11 +89,14 @@ module.exports = {
                         idUser: _returnMongo[0].idUser,
                         nickname: _returnMongo[0].nickname,
                         tier: _returnMongo[0].tier,
-                        exBucks: _returnMongo[0].exBucks
                     }
 
                     let _jwtUser = jwt.sign(_newUser, process.env.secretJWT, { expiresIn: "1h" });
                     //let _jwtUser = jwt.sign(_newUser, process.env.secretJWT, { expiresIn: 10 });
+
+                    // - Añadimos el saldo despues para que no navegue en el token
+                    _newUser.exBucks = _returnMongo[0].exBucks;
+
                     let respuesta = {
                         userData: _newUser,
                         jwt: _jwtUser

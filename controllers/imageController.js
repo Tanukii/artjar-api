@@ -47,23 +47,25 @@ module.exports = {
                 res.setHeader("Content-Type", "application/json");
                 res.status(200).send({ res: true, exp:false });
             }
-            fileSys.unlinkSync(req.files.foto[0].path);
+            //fileSys.unlinkSync(req.files.foto[0].path);
 
         } catch (err) {
             // - Error en el proceso -
             if(err.expiredAt){
                 // - Token expirado -
-                fileSys.unlinkSync(req.files.foto[0].path);
+                //fileSys.unlinkSync(req.files.foto[0].path);
                 res.setHeader("Content-Type", "application/json");
                 res.status(400).send({ res: false, exp: true });
             }else{
-                fileSys.unlinkSync(req.files.foto[0].path);
+                //fileSys.unlinkSync(req.files.foto[0].path);
                 console.log(err);
                 res.setHeader("Content-Type", "application/json");
                 res.status(400).send({ res: false, exp:false });
             }
             
         }
+        // - Borrado de imagen a fuera de todo para que ejecute siempre -
+        fileSys.unlinkSync(req.files.foto[0].path);
     }
 
 }

@@ -8,7 +8,8 @@ var imagenSchema= new mongoose.Schema(
         rutaOrig: { type:String, required: true},
         rutaRes: { type: String, default: true },
         precioOrig: { type: Number, required: true},
-        porPagar: { type: Number, required: true}
+        porPagar: { type: Number, required: true},
+        isUnlocked: { type: Boolean, required: true}
     }
 );
 module.exports=mongoose.model("Imagen",imagenSchema,"imagenes")
