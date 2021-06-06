@@ -2,9 +2,10 @@
 var userController = require("../controllers/userController")
 var imageController = require("../controllers/imageController")
 
-let multer = require('multer');
+const path = require('path');
+const multer = require('multer');
 
-let upload = multer({dest:'uploads/'});
+let upload = multer({dest: 'private/uploads'});
     
 
 module.exports=function(app){
