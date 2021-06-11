@@ -2,7 +2,6 @@
 var userController = require("../controllers/userController")
 var imageController = require("../controllers/imageController")
 
-const path = require('path');
 const multer = require('multer');
 
 let upload = multer({dest: 'private/uploads'});

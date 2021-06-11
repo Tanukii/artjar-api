@@ -39,7 +39,8 @@ module.exports = {
                     rutaOrig: _rutaOrig, // Ruta del original
                     rutaRes: _rutaRes, // Ruta con resolucion cambiada
                     precioOrig: req.body.precio, // Precio original
-                    porPagar: req.body.precio // Cantidad que falta por pagar
+                    porPagar: req.body.precio, // Cantidad que falta por pagar
+                    isUnlocked: false
                 });
 
                 await _newImage.save();
